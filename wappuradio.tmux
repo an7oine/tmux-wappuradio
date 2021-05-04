@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+pvm=$( date +%m-%d )
+[[ 04-14 < $pvm && $pvm < 05-01 ]]; sesonki=$?
+
 if [ $# -eq 0 ]; then
   # Kytketään liitännäinen päälle: tilarivi.
   status_right=$(tmux show-option -gqv "status-right")
@@ -7,5 +10,7 @@ if [ $# -eq 0 ]; then
     "#(\"${BASH_SOURCE[0]}\" esittaja_ja_kappale)$status_right"
 
 elif [ $1 == esittaja_ja_kappale ]; then
-  curl -s 'https://wappuradio.fi/api/nowplaying' | jq -r '"♫ " + .song'
+  if $sesonki; then
+    curl -s 'https://wappuradio.fi/api/nowplaying' | jq -r '"♫ " + .song'
+  fi
 fi
